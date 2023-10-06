@@ -1,4 +1,4 @@
-# capstone-project
+# financial data predict
 3/22 진행사항
 * stock에서 사용되는 용어정리 및 개념 이해.
 * Data collection에 대하여 크롤링에 대한 방법 모색.
