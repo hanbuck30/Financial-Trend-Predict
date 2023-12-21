@@ -1,9 +1,5 @@
 # financial data predict
-3/22 진행사항
-* stock에서 사용되는 용어정리 및 개념 이해.
-* Data collection에 대하여 크롤링에 대한 방법 모색.
-* 201109 - Intelligent stock trading system based on improved technical analysis and Echo State Network 논문 구현 예정.
----------
+
 num_generations: 유전 알고리즘이 반복하는 세대(파생)의 총 수를 지정합니다.
 
 num_parents_mating: 새로운 세대를 생성하기 위해 교배하는 솔루션(부모)의 수를 지정합니다.
