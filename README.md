@@ -23,5 +23,5 @@ mutation_type: 돌연변이 작업에 사용되는 방법을 지정합니다. "r
 mutation_percent_genes: 돌연변이가 일어날 유전자의 비율을 지정합니다. 이 비율은 개별 솔루션의 유전자가 아닌 모집단의 총 유전자 수에서 계산됩니다.
 
 ## Optimizer
-Gnetic Algorithm optimizer(GA)
-Particle Swarm Optimizer(PSO)
+* Gnetic Algorithm optimizer(GA)
+* Particle Swarm Optimizer(PSO)
