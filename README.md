@@ -1,27 +1,80 @@
 # financial data predict
 
-num_generations: 유전 알고리즘이 반복하는 세대(파생)의 총 수를 지정합니다.
+## Overview
 
-num_parents_mating: 새로운 세대를 생성하기 위해 교배하는 솔루션(부모)의 수를 지정합니다.
+This repository contains an implementation of a trend prediction algorithm that leverages KRX (Korea Exchange) data and various technical analysis (TA) indicators. The algorithm is designed to optimize for both profitability and minimized maximum drawdown (MDD), providing a balance between potential returns and risk mitigation.
 
-fitness_func: 현재 모집단에서 각 솔루션의 적합도 값을 계산하는 사용자 정의 함수입니다. 이 적합도 함수는 문제에 따라 달라지며, 유전 알고리즘이 모집단의 솔루션을 어떻게 점수 매기는지 이해하는 데 도움을 줍니다.
+The final implementation is in the notebook `mod_tradelogicv2_park3.ipynb`, which includes all the functionalities discussed below.
 
-sol_per_pop: 모집단의 솔루션 수를 지정합니다. 각 솔루션은 문제의 가능한 해답을 대표합니다.
+## Project Structure
 
-num_genes: 각 솔루션에서의 유전자 수를 지정합니다. 각 유전자는 솔루션의 특정 부분을 대표합니다.
+- **crawling & hurst exponent/**: This folder contains scripts and resources for data collection and analysis of the Hurst exponent. By calculating the Hurst exponent, we identify stocks that are more predictable and limit the analysis to these stocks. This ensures that the algorithm focuses only on assets with higher predictability, thereby improving overall performance.
 
-init_range_low와 init_range_high: 초기 모집단에서 유전자에 할당되는 무작위 값의 하한과 상한을 각각 지정합니다.
+- **mod_tradelogicv2_park3.ipynb**: The final implementation of the trend prediction algorithm, where KRX data is transformed into TA indicators and used to develop a trend prediction logic. The notebook also includes optimization through a Genetic Algorithm (GA) for tuning hyperparameters.
 
-parent_selection_type: 교배하게 될 부모를 선택하는 방법을 지정합니다. 여러 가지 유형이 있으며, "rank", "random", "roulette", "tournament", "steady_state" 등이 있습니다.
+## Key Components
 
-keep_parents: 다음 세대에서 유지될 부모의 수를 지정합니다.
+### 1. Hurst Exponent Analysis
+The Hurst exponent is a statistical measure used to determine the predictability of a time series. A value closer to 1 indicates a persistent trend, while a value closer to 0.5 suggests a random walk. This analysis helps in filtering stocks that exhibit stronger trends and are therefore easier to predict.
 
-crossover_type: 교차(교배) 작업에 사용되는 방법을 지정합니다. "single_point", "two_points", "uniform" 등 여러 가지 유형이 있습니다.
+The **crawling & hurst exponent/** folder contains scripts to calculate the Hurst exponent for different stocks in the KRX dataset. Only stocks with a high Hurst exponent are selected for further analysis, enhancing the accuracy and robustness of the predictive model.
 
-mutation_type: 돌연변이 작업에 사용되는 방법을 지정합니다. "random", "swap", "scramble", "inversion" 등이 있습니다.
+### 2. Data Transformation to TA Indicators
+The KRX data is processed and transformed into various technical analysis indicators. These indicators serve as the foundation for building predictive models. The algorithm converts the raw data into useful insights by considering:
 
-mutation_percent_genes: 돌연변이가 일어날 유전자의 비율을 지정합니다. 이 비율은 개별 솔루션의 유전자가 아닌 모집단의 총 유전자 수에서 계산됩니다.
+- Moving Averages (e.g., SMA, EMA)
+- Relative Strength Index (RSI)
+- Bollinger Bands
+- MACD (Moving Average Convergence Divergence)
+- Other common TA indicators
 
-## Optimizer
-* Gnetic Algorithm optimizer(GA)
-* Particle Swarm Optimizer(PSO)
+The transformation requires several hyperparameters, which are optimized using a Genetic Algorithm (GA) to improve the effectiveness of the indicators.
+
+### 3. Hyperparameter Optimization using Genetic Algorithm (GA)
+Hyperparameters related to TA indicators and trend prediction models are optimized using a heuristic approach: a Genetic Algorithm (GA). The GA optimization focuses on maximizing the algorithm's performance by balancing:
+
+- **Profitability**: Ensuring the algorithm generates positive returns over the backtesting period.
+- **Maximum Drawdown (MDD)**: Limiting the largest observed loss from a peak to a trough, which helps in reducing the perceived risk for users.
+
+The fitness function for the GA considers both profitability and MDD, ensuring a risk-aware optimization process.
+
+### 4. Trend Prediction Logic with Threshold and RC Model (ESN)
+To predict market trends, a threshold logic is used alongside a Reservoir Computing (RC) model, specifically an Echo State Network (ESN). The logic helps in making buy/sell decisions based on the predictions, improving the algorithm's practicality for trading.
+
+The hyperparameters for the threshold and RC model are also optimized using the Genetic Algorithm, with the same fitness function focused on both returns and risk management.
+
+### 5. Backtesting
+Backtesting is an integral part of the project, providing insight into the algorithm's historical performance. The backtesting framework measures key metrics, such as:
+
+- **Profitability**: Total returns generated over the backtesting period.
+- **Maximum Drawdown (MDD)**: The largest observed loss during the period, reflecting the risk of the strategy.
+
+The results are compared to existing strategies to showcase the improvements in performance.
+
+## How to Run
+
+1. **Install Dependencies**: Ensure that you have all the necessary dependencies installed. You can find a list of the required libraries in the `requirements.txt` file.
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. **Data Collection and Hurst Exponent Calculation**: Use the scripts in the `crawling & hurst exponent/` folder to collect and preprocess the KRX data. After that, calculate the Hurst exponent for each stock to identify the ones with higher predictability.
+
+3. **Run the Notebook**: Open and run `mod_tradelogicv2_park3.ipynb` to execute the full analysis, including data transformation, model optimization, and backtesting.
+
+## Results
+
+The final backtesting results demonstrate that the proposed trend prediction algorithm offers improved profitability and lower maximum drawdown compared to traditional strategies. The balance between returns and risk management is achieved through careful hyperparameter tuning using Genetic Algorithms.
+
+Additionally, the Hurst exponent analysis further enhances the model by filtering for more predictable stocks, leading to better trend predictions and improved overall robustness of the algorithm.
+
+## Conclusion
+
+This project showcases the development of a trend prediction algorithm that combines technical analysis, heuristic optimization, and backtesting to create a balanced trading strategy. By focusing on both returns and risk management, and by using the Hurst exponent to select the most predictable stocks, the algorithm provides a practical solution for trading based on KRX data.
+
+Feel free to explore the code and adapt the strategy to different markets or datasets.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
