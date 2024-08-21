@@ -1,4 +1,4 @@
-# financial data predict
+# Financial-Trend-Predict
 
 ## Overview
 
